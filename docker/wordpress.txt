@@ -4,7 +4,7 @@ $ docker run -ti --name="wordpress" ubuntu:14.04
 
 debconf-set-selections <<< 'mysql-server mysql-server/root_password password qweQWE123'
 debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password qweQWE123'
-apt-get -y install wget apache2 mysql-server libapache2-mod-auth-mysql php5-mysql php5 libapache2-mod-php5
+apt-get -y install wget apache2 mysql-server libapache2-mod-auth-mysql php5-mysql php5 libapache2-mod-php5 vsftpd nano
 mysql_install_db
 
 # wordpress-cli
@@ -28,6 +28,33 @@ wp core config --allow-root --dbname=wordpress --dbuser=root --dbpass=qweQWE123
 
 # =================================== this works ===============================================
 
+
+let's try for the ftp
+
+- - - - - - - - - 
+
+adduser --disabled-password --gecos "" csm
+usermod -d /var/www/html csm
+usermod -g root csm # change csm's primary group to root
+
+# no! echo "csm:csm"|chpasswd
+
+
+mkdir -p /var/run/vsftpd/empty
+
+chmod -R ugo+rw /var/www
+
+chgpasswd cms <<TAG
+cms
+cms
+TAG
+
+# vsftpd file 
+# Uncomment this to enable any form of FTP write command.
+write_enable=YES
+
+
+- - - - - - - - - 
 
 
 
