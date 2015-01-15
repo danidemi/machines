@@ -10,8 +10,11 @@ RUN apt-get install -y \
  mysql-server \
  php5 \
  php5-mysql \
+ python-setuptools \
  vsftpd \
  wget
+
+RUN ["easy_install", "supervisor"]
 
 RUN mysql_install_db
 RUN ["/etc/init.d/mysql", "start"]
@@ -40,6 +43,13 @@ RUN ["/bin/bash", "-c", "echo -e \"cms\\ncms\" > tmp/pwd; passwd cms < tmp/pwd"]
 
 COPY bashrc.extension.txt /tmp/
 RUN ["cat /tmp/bashrc.extension.txt >> /etc/bash.bashrc"]
+
+COPY supervisord.conf /etc/
+
+COPY foreground.sh /etc/apache2/
+RUN chmod ugo+x /etc/apache2/foreground.sh
+
+CMD ["supervisord", "-n"]
 
 EXPOSE 80
 EXPOSE 20
